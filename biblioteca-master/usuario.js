@@ -1,4 +1,4 @@
-const conectar = require('./database')
+const { conectar } = require('./database')
 
 async function listarUsuarios(){
     const conexao = await conectar();

@@ -10,4 +10,4 @@ async function conectar(){
     return conexao;
 }
 
-exports.module = {conectar}
+module.exports = {conectar}

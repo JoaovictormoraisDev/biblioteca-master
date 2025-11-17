@@ -1,14 +1,19 @@
 const express = require('express');
-const listarUsuarios = require('./usuario')
+const { listarUsuarios } = require('./usuario')
 const app = express();
 
 app.get('/', (req, res) => {
     res.send('<h1>Está vivo</h1>')
 });
 
-app.get('/usuario', (req, res) => {
-    const [rows] = await listarUsuarios();
-    res.send('Listagem de usuários')
+app.get('/usuario', async (req, res) => {
+    try {
+        const usuarios = await listarUsuarios();
+        res.json(usuarios);
+    } catch (error) {
+        console.error("Erro ao listar usuários:", error);
+        res.status(500).send('Erro ao buscar usuários no servidor.');
+    }
 })
 
 app.post('/usuario', (req, res) => {
@@ -23,4 +28,6 @@ app.delete('/usuario', (req, res) => {
     res.send('Deletar usuário')
 })
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
+});
