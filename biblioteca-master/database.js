@@ -1,4 +1,4 @@
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')
 async function conectar(){
     const conexao = await mysql.createConnection({
         host : 'localhost',
@@ -10,4 +10,4 @@ async function conectar(){
     return conexao;
 }
 
-module.exports = {conectar}
+module.exports = conectar
