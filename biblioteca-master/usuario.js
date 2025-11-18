@@ -21,4 +21,19 @@ async function inserirUsuario(data){
     }    
 }
 
-module.exports = {listarUsuarios, inserirUsuario}
+async function atualizarUsuario(id, data){
+    try{
+        const { nome, tipouser, email, telefone } = data;
+        const conexao = await conectar();
+        const sql = `UPDATE usuario SET nome = ?, tipouser = ?, email = ?, telefone = ? WHERE id = ?`;
+        const [resultado] = await conexao.execute(sql, [nome, tipouser, email, telefone, id]);
+        return resultado;
+    }catch(e){
+        throw new Error(`Aconteceu um erro inesperado durante a atualização do usuário no banco de dados. \n \n ${e.message}`)
+    }
+}
+    
+
+
+
+module.exports = {listarUsuarios, inserirUsuario, atualizarUsuario}
