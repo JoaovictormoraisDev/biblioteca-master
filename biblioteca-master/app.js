@@ -1,6 +1,11 @@
 const express = require('express');
-const { listarUsuarios } = require('./usuario')
+const { listarUsuarios, AdicionarUsuario, AtualizarUsuario, DeletarUsuario } = require('./usuario');
+const bp = require('body-parser');
 const app = express();
+
+app.use(bp.urlencoded({extended: true}))
+app.use(bp.json());
+
 
 app.get('/', (req, res) => {
     res.send('<h1>Está vivo</h1>')
@@ -8,16 +13,27 @@ app.get('/', (req, res) => {
 
 app.get('/usuario', async (req, res) => {
     try {
-        const usuarios = await listarUsuarios();
-        res.json(usuarios);
+        const [rows] = await listarUsuarios();
+        res.status(200).send(`listagem de usuarios \n ${JSON.stringify(rows)}` );
     } catch (error) {
-        console.error("Erro ao listar usuários:", error);
-        res.status(500).send('Erro ao buscar usuários no servidor.');
+       res.status(500).json({
+        'erro': error.message
+       })
     }
 })
 
-app.post('/usuario', (req, res) => {
-    res.send('Adicionar novo usuário')
+app.post('/usuario', async (req, res) => {
+  try{
+    let body = req.body;
+    console.log(body)
+    AdicionarUsuario(body);
+    res.status(201).send('usuarior cadastrado com sucesso')
+  }catch(error){
+    res.status(500).json({
+        "erro": error.message
+    })
+    
+  }
 })
 
 app.put('/usuario', (req, res) => {
